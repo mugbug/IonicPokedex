@@ -1,0 +1,29 @@
+<!--
+  Generated template for the PokemonListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Pokémons</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <!-- list pokemons -->
+    <button ion-item *ngFor="let pokemon of pokemons" (click)="openPokemonDetails(pokemon.id)">
+      <ion-avatar item-start>
+        <img src="{{ pokemon.sprites.front_shiny }}">
+      </ion-avatar>
+      <span style="text-transform: capitalize;">
+        {{ pokemon.name }}
+      </span>
+    </button>
+
+  </ion-list>
+</ion-content>
