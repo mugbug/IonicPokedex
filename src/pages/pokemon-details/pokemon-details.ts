@@ -16,10 +16,8 @@ export class PokemonDetailsPage {
   constructor(public navCtrl: NavController,
     private navParams: NavParams,
     private pokeapiProvider: PokeapiProvider) {
+      // get selected pokemon
       this.pokemon = this.navParams.get('pokemon')
-  }
-  ionViewWillEnter() {
-    // this.pokemon = 'Pikachuhu';
   }
 
 }

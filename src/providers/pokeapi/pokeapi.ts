@@ -14,11 +14,15 @@ export class PokeapiProvider {
   url = 'https://pokeapi.co/api/v2/';
 
   constructor(public http: Http) {
-    console.log('Hello PokeapiProvider Provider');
   }
 
   getPokemonById(id){
     return this.http.get(this.url+'pokemon/'+id+'/')
       .map(api_response => api_response.json());
+  }
+
+  getItemById(id){
+    return this.http.get(this.url+'item/'+id+'/')
+    .map(api_response => api_response.json());
   }
 }

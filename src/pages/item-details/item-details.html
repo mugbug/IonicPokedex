@@ -7,12 +7,34 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>item-details</ion-title>
+    <ion-title>
+      <span class="capitalize">
+        {{ item.name }}
+      </span>
+    </ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <ion-card>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-4>
+          <img src="{{ item.sprites.default }}"/>
+        </ion-col>
+        <ion-col col-8>
+          <ion-card-content>
+            <ion-card-title>
+              <strong class="capitalize">
+                {{ item.name }}
+              </strong>
+            </ion-card-title>
+            Cost: $ {{ item.cost }}
+          </ion-card-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
 </ion-content>

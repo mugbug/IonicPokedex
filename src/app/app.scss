@@ -18,3 +18,17 @@
 .capitalize {
     text-transform: capitalize;
 }
+
+.details-title-primary {
+    padding: 5px;
+    border-radius: 2%;
+    background-color: color($colors, primary);
+    color: color($colors, light);
+}
+
+.details-title-secondary {
+    padding: 5px;
+    border-radius: 2%;
+    background-color: color($colors, secondary);
+    color: color($colors, light);
+}
