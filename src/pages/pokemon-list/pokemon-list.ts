@@ -16,33 +16,20 @@ import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
   templateUrl: 'pokemon-list.html',
 })
 export class PokemonListPage {
-  pokemon: {
-    id:number,
-    name:string
-  }
   pokemons = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private pokeapiProvider: PokeapiProvider) {
-    // for(var i=1; i<10; i++){
-    //   this.pokeapiProvider.getPokemonById(i)
-    //   .subscribe(api_response => {
-    //     this.pokemon.name = api_response.name;
-    //   });
-    //   this.pokemons.push(this.pokemon);
-    // }
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private pokeapiProvider: PokeapiProvider) {
+      for(let i=1; i<10; i++){
+        this.pokeapiProvider.getPokemonById(i+155)
+        .subscribe(api_response => {
+          this.pokemons.push(api_response);
+        });
+      }
   }
 
-  ionViewWillEnter(){
-    for(let i=1; i<21; i++){
-      this.pokeapiProvider.getPokemonById(i)
-      .subscribe(api_response => {
-        this.pokemons.push(api_response);
-      });
-    }
-  }
-
-  openPokemonDetails(id) {
-    
-    this.navCtrl.push(PokemonDetailsPage)
+  openPokemonDetails(p) {
+    return this.navCtrl.push(PokemonDetailsPage, {pokemon: p});
   }
 }

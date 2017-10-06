@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
 
-/**
- * Generated class for the PokemonDetailsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { PokemonListPage } from '../pokemon-list/pokemon-list';
+
 
 @IonicPage()
 @Component({
@@ -14,12 +11,15 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'pokemon-details.html',
 })
 export class PokemonDetailsPage {
+  pokemon;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController,
+    private navParams: NavParams,
+    private pokeapiProvider: PokeapiProvider) {
+      this.pokemon = this.navParams.get('pokemon')
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad PokemonDetailsPage');
+  ionViewWillEnter() {
+    // this.pokemon = 'Pikachuhu';
   }
 
 }

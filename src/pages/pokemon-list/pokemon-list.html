@@ -6,9 +6,14 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-toolbar color="primary">
     <ion-title>Pokémons</ion-title>
-  </ion-navbar>
+    <ion-buttons end>
+      <button ion-button icon-only color="light">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 
 </ion-header>
 
@@ -16,11 +21,11 @@
 <ion-content padding>
   <ion-list>
     <!-- list pokemons -->
-    <button ion-item *ngFor="let pokemon of pokemons" (click)="openPokemonDetails(pokemon.id)">
+    <button ion-item *ngFor="let pokemon of pokemons" (click)="openPokemonDetails(pokemon)">
       <ion-avatar item-start>
-        <img src="{{ pokemon.sprites.front_shiny }}">
+        <img src="{{ pokemon.sprites.front_default }}">
       </ion-avatar>
-      <span style="text-transform: capitalize;">
+      <span class="capitalize">
         {{ pokemon.name }}
       </span>
     </button>
