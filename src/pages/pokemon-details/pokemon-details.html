@@ -55,7 +55,18 @@
         <ion-card-title class="details-title-primary"><strong>Stats:</strong></ion-card-title> 
         <ion-list no-lines>
             <ion-item class="capitalize details-content" *ngFor="let stat of pokemon.stats">
-              {{ stat.stat.name }}: {{ stat.base_stat }}
+              
+              <ion-row>
+                <ion-col col-4>
+                  <span style="font-size: 130%; color:brown">
+                    {{ stat.base_stat }}
+                  </span>
+                </ion-col>
+                <ion-col col-8>
+                  {{ stat.stat.name }}
+                </ion-col>
+              </ion-row>
+
             </ion-item>
         </ion-list>
         <!-- moves -->

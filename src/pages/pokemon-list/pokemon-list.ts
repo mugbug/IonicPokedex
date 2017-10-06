@@ -33,10 +33,10 @@ export class PokemonListPage {
           this.pokeapiProvider.getPokemonById(i)
           .subscribe(api_response => {
             this.pokemons.push(api_response);
+            if(i>10) loader.dismiss();
           });
         }
         this.offset += 15;
-        loader.dismiss();
       });
   }
 
@@ -46,7 +46,7 @@ export class PokemonListPage {
 
   doInfinite(infiniteScroll) {
     setTimeout(() => {
-      for(let i=1; i<10; i++){
+      for(let i=1; i<=15; i++){
         this.pokeapiProvider.getPokemonById(i+this.offset)
         .subscribe(api_response => {
           this.pokemons.push(api_response);
@@ -56,4 +56,5 @@ export class PokemonListPage {
       infiniteScroll.complete();
     }, 500);
   }
+
 }

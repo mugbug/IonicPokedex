@@ -19,7 +19,7 @@
 
 
 <ion-content padding>
-  <ion-list>
+  <ion-list *ngIf="pokemons.length > 10">
     <!-- list pokemons -->
     <button ion-item *ngFor="let pokemon of pokemons" (click)="openPokemonDetails(pokemon)">
       <ion-avatar item-start>
@@ -29,7 +29,6 @@
         {{ pokemon.name }}
       </span>
     </button>
-
   </ion-list>
 
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)" threshold="100px">

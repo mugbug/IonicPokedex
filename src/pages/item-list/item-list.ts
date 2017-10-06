@@ -32,10 +32,10 @@ export class ItemListPage {
           this.pokeapiProvider.getItemById(i)
           .subscribe(api_response => {
             this.items.push(api_response);
+            if(i>10) loader.dismiss();
           });
         }
         this.offset += 15;
-        loader.dismiss();
       });
   }
 
@@ -47,7 +47,7 @@ export class ItemListPage {
   doInfinite(infiniteScroll) {
     // when reached end of list, request more data
     setTimeout(() => {
-      for(let i=1; i<10; i++){
+      for(let i=1; i<=15; i++){
         this.pokeapiProvider.getItemById(i+this.offset)
         .subscribe(api_response => {
           this.items.push(api_response);
