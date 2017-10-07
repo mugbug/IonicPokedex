@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
-
-import { PokemonListPage } from '../pokemon-list/pokemon-list';
+import { IonicPage, NavParams } from 'ionic-angular';
 
 
 @IonicPage()
@@ -13,9 +10,7 @@ import { PokemonListPage } from '../pokemon-list/pokemon-list';
 export class PokemonDetailsPage {
   pokemon;
 
-  constructor(public navCtrl: NavController,
-    private navParams: NavParams,
-    private pokeapiProvider: PokeapiProvider) {
+  constructor(private navParams: NavParams) {
       // get selected pokemon
       this.pokemon = this.navParams.get('pokemon')
   }

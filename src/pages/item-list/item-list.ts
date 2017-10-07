@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
 import { ItemDetailsPage } from '../item-details/item-details';
 import { LoadingController } from 'ionic-angular';
+// import { Storage } from '@ionic/storage';
 /**
  * Generated class for the ItemListPage page.
  *
@@ -23,20 +24,29 @@ export class ItemListPage {
     public navParams: NavParams,
     private pokeapiProvider: PokeapiProvider,
     public loading: LoadingController) {
-      let loader = this.loading.create({
-        content: 'Looking for Poke-Balls...',
-      });
-    
-      loader.present().then(() => {
-        for(let i=1; i<=15; i++){
-          this.pokeapiProvider.getItemById(i)
-          .subscribe(api_response => {
-            this.items.push(api_response);
-            if(i>10) loader.dismiss();
-          });
-        }
-        this.offset += 15;
-      });
+
+  }
+
+  // when page loads
+  ionViewDidLoad() {
+    // create a loading spinner
+    let loader = this.loading.create({
+      content: 'Looking for Poke-Balls...',
+    });
+    // present spinner while data is being fetched
+    // then dismiss spinner
+    loader.present().then(() => {
+      for(let i=1; i<=15; i++){
+        this.pokeapiProvider.getItemById(i)
+        .subscribe(api_response => {
+          // add item to items list
+          this.items.push(api_response);
+          if(i>10) loader.dismiss();
+        });
+      } // end for
+
+      this.offset += 15;
+    });
   }
 
   openItemDetails(i) {

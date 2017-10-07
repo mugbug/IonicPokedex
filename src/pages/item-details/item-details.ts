@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
-
-import { ItemListPage } from '../item-list/item-list';
+import { IonicPage, NavParams } from 'ionic-angular';
 
 /**
  * Generated class for the ItemDetailsPage page.
@@ -19,9 +16,7 @@ import { ItemListPage } from '../item-list/item-list';
 export class ItemDetailsPage {
   item;
 
-  constructor(public navCtrl: NavController,
-    private navParams: NavParams,
-    private pokeapiProvider: PokeapiProvider) {
+  constructor(private navParams: NavParams) {
       // get selected item
       this.item = this.navParams.get('item');
   }
