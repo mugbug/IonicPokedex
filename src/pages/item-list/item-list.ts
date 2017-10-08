@@ -4,12 +4,7 @@ import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
 import { ItemDetailsPage } from '../item-details/item-details';
 import { LoadingController } from 'ionic-angular';
 // import { Storage } from '@ionic/storage';
-/**
- * Generated class for the ItemListPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+
 
 @IonicPage()
 @Component({
@@ -17,14 +12,13 @@ import { LoadingController } from 'ionic-angular';
   templateUrl: 'item-list.html',
 })
 export class ItemListPage {
-  items = [];
-  offset = 0;
+  items = []; // list of items
+  offset = 0; // item id counter
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private pokeapiProvider: PokeapiProvider,
     public loading: LoadingController) {
-
   }
 
   // when page loads
@@ -45,6 +39,7 @@ export class ItemListPage {
         });
       } // end for
 
+      // increment item id counter
       this.offset += 15;
     });
   }

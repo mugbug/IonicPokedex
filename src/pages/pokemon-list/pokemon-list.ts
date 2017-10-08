@@ -1,16 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { PokemonDetailsPage } from '../pokemon-details/pokemon-details'
 import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
 import { LoadingController } from 'ionic-angular';
-// import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage';
 
-/**
- * Generated class for the PokemonListPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -18,80 +12,93 @@ import { LoadingController } from 'ionic-angular';
   templateUrl: 'pokemon-list.html',
 })
 export class PokemonListPage {
-  pokemons = []; // list of pokemons
-  offset = 0;    // pokemon id counter
+  private pokemons = [];
+  private loader:any;
+  private offset = 1;
 
-  constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+  constructor(private navCtrl: NavController,
     private pokeapiProvider: PokeapiProvider,
-    public loading: LoadingController) {
-      // get stored data
-      // this.storage.get('pokemons').then((pokemons) => {
-      //   if(pokemons != null) {
-      //     console.log(pokemons);
-
-      //     this.pokemons = JSON.parse(pokemons);
-      //     this.offset = this.pokemons.length;
-      //     console.log("there is pokemons on db");
-      //   }
-      //   else console.log("there is no pokemons on db");
-
-      // });
-
-      // if pokemons is empty -- first time using app
-      // fetches first pokemons
-      // this.pokemons.length == 0 ? console.log("true") : console.log("false/#"+this.pokemons.length);
-
-
-      // if(this.pokemons.length == 0){
-
-      // }
+    private loading: LoadingController,
+    private storage: Storage) {
   }
 
   // when page loads
-  ionViewDidLoad(){
-    // create a loading spinner
-    let loader = this.loading.create({
-      content: 'Looking for Pokémons...',
-    });
-    // present spinner while data is being fetched
-    // then dismiss spinner
-    loader.present().then(() => {
-      for(let i=1; i<=15; i++){
-        this.pokeapiProvider.getPokemonById(i)
-        .subscribe(api_response => {
-          // add pokemon to pokemons list
-          this.pokemons.push(api_response);
-          // store pokemons
-          // this.storage.set('pokemons', JSON.stringify(this.pokemons));
-          if(i>10) loader.dismiss();
-        });
-      } // end for
-
-      // increment pokemon id counter
-      this.offset += 15;
-      // store current offset
-      // this.storage.set('offset', JSON.stringify(this.offset));
-    });
+  ionViewWillEnter(){
+    this.getStoredData();
   }
 
-  openPokemonDetails(p) {
+  private openPokemonDetails(p) {
     // go to pokemon details page
     return this.navCtrl.push(PokemonDetailsPage, {pokemon: p});
   }
 
-  doInfinite(infiniteScroll) {
+  private doInfinite(infiniteScroll) {
     // when reached end of list, request more data
     setTimeout(() => {
-      for(let i=1; i<=15; i++){
-        this.pokeapiProvider.getPokemonById(i+this.offset)
-        .subscribe(api_response => {
-          this.pokemons.push(api_response);
-          // this.storage.set('pokemons', JSON.stringify(this.pokemons));
-        });
-      }
-      this.offset += 15;
+      this.fetchPokemons();
       infiniteScroll.complete();
     }, 500);
+  }
+
+  private createLoading(){
+    if (this.loader == null) {
+      this.loader = this.loading.create({
+        content: 'Looking for Pokémons...',
+      });
+    }
+  }
+
+  private getPokemonList(id){
+    this.pokeapiProvider.getPokemonById(id).then(data => {
+      console.log('current id: '+id);
+      if(id < this.offset+15){
+        this.pokemons.push(data);
+        // request next pokemon data
+        this.getPokemonList(++id);
+      } else {
+        console.log('dismissing loading');
+        this.loader.dismiss();
+        this.loader = null;
+        // set breakpoint
+        this.offset = id;
+        // store all pokemons and current offset
+        console.log('storing data...');
+        this.storage.ready().then(() => {
+          console.log('storage is ready.');
+          this.storage.set('pokemons', JSON.stringify(this.pokemons));
+          this.storage.set('offset', this.offset);
+        });
+        console.log('data stored!');
+      }
+
+    });
+  }
+
+  private fetchPokemons(){
+    this.createLoading();
+    this.loader.present().then(() => {
+      this.getPokemonList(this.offset);
+    });
+  }
+
+  private getStoredData() {
+    this.storage.ready().then(() => {
+      this.storage.get('pokemons').then((stored_pokemons) => {
+        if(stored_pokemons != null){
+          this.pokemons = JSON.parse(stored_pokemons);
+        } else {
+          console.log("no stored pokemons");
+        }
+      });
+      this.storage.get('offset').then((stored_offset) => {
+        if(stored_offset != null){
+          console.log(stored_offset);
+          this.offset = stored_offset;
+        } else {
+          console.log("no stored offset");
+          this.fetchPokemons();
+        }
+      });
+    });
   }
 }

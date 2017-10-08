@@ -16,9 +16,14 @@ export class PokeapiProvider {
   constructor(public http: Http) {
   }
 
-  getPokemonById(id){
-    return this.http.get(this.url+'pokemon/'+id+'/')
-      .map(api_response => api_response.json());
+  getPokemonById(id: number): Promise<any> {
+    return new Promise(resolve => {
+      this.http.get(this.url+'pokemon/'+id+'/')
+      .map(api_response => api_response.json())
+      .subscribe(data => {
+        resolve(data);
+      })
+    });
   }
 
   getItemById(id){
