@@ -23,7 +23,7 @@ export class PokemonListPage {
   }
 
   // when page loads
-  ionViewWillEnter(){
+  ionViewDidLoad(){
     this.getStoredData();
   }
 
@@ -50,27 +50,23 @@ export class PokemonListPage {
 
   private getPokemonList(id){
     this.pokeapiProvider.getPokemonById(id).then(data => {
-      console.log('current id: '+id);
+      console.log('current pokémon id: '+id);
       if(id < this.offset+15){
         this.pokemons.push(data);
         // request next pokemon data
         this.getPokemonList(++id);
       } else {
-        console.log('dismissing loading');
         this.loader.dismiss();
         this.loader = null;
         // set breakpoint
         this.offset = id;
         // store all pokemons and current offset
-        console.log('storing data...');
         this.storage.ready().then(() => {
-          console.log('storage is ready.');
+          console.log('storage is ready, storing pokémons...');
           this.storage.set('pokemons', JSON.stringify(this.pokemons));
-          this.storage.set('offset', this.offset);
+          this.storage.set('pokemon_offset', this.offset);
         });
-        console.log('data stored!');
       }
-
     });
   }
 
@@ -86,16 +82,13 @@ export class PokemonListPage {
       this.storage.get('pokemons').then((stored_pokemons) => {
         if(stored_pokemons != null){
           this.pokemons = JSON.parse(stored_pokemons);
-        } else {
-          console.log("no stored pokemons");
         }
       });
-      this.storage.get('offset').then((stored_offset) => {
+      this.storage.get('pokemon_offset').then((stored_offset) => {
         if(stored_offset != null){
-          console.log(stored_offset);
           this.offset = stored_offset;
         } else {
-          console.log("no stored offset");
+          console.log("no stored pokemons, requesting some...");
           this.fetchPokemons();
         }
       });

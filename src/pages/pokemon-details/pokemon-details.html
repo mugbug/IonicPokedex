@@ -16,16 +16,20 @@
     <ion-card>
       <ion-grid>
         <ion-row>
-          <ion-col col-5>
+          <ion-col col-12 style="text-align: center;">
+            <ion-card-title>
+              <strong class="capitalize">
+                {{ pokemon.name }}
+              </strong>
+            </ion-card-title>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-6>
             <img src="{{ pokemon.sprites.front_default }}"/>
           </ion-col>
-          <ion-col col-7>
+          <ion-col col-6>
             <ion-card-content>
-              <ion-card-title>
-                <strong class="capitalize">
-                  {{ pokemon.name }}
-                </strong>
-              </ion-card-title>
               <strong>Weight: </strong> {{ pokemon.weight }} <br>
               <strong>Height: </strong> {{ pokemon.height }} <br>
               <strong>Base xp: </strong> {{ pokemon.base_experience }} <br>
@@ -38,24 +42,24 @@
     <ion-card class="details-card">
       <ion-card-content>
         <!-- abilities -->
-        <ion-card-title class="details-title-primary"><strong>Abilities:</strong></ion-card-title> 
+        <ion-card-title class="details-title-primary"><strong>Abilities:</strong></ion-card-title>
         <ion-list no-lines>
             <ion-item class="capitalize details-content" *ngFor="let ability of pokemon.abilities">
               {{ ability.ability.name }}
             </ion-item>
         </ion-list>
         <!-- types -->
-        <ion-card-title class="details-title-secondary"><strong>Types:</strong></ion-card-title> 
+        <ion-card-title class="details-title-secondary"><strong>Types:</strong></ion-card-title>
         <ion-list no-lines>
             <ion-item class="capitalize details-content" *ngFor="let type of pokemon.types">
               {{ type.type.name }}
             </ion-item>
         </ion-list>
         <!-- stats -->
-        <ion-card-title class="details-title-primary"><strong>Stats:</strong></ion-card-title> 
+        <ion-card-title class="details-title-primary"><strong>Stats:</strong></ion-card-title>
         <ion-list no-lines>
             <ion-item class="capitalize details-content" *ngFor="let stat of pokemon.stats">
-              
+
               <ion-row>
                 <ion-col col-4>
                   <span style="font-size: 130%; color:brown">
@@ -70,7 +74,7 @@
             </ion-item>
         </ion-list>
         <!-- moves -->
-        <ion-card-title class="details-title-secondary"><strong>Moves:</strong></ion-card-title> 
+        <ion-card-title class="details-title-secondary"><strong>Moves:</strong></ion-card-title>
         <ion-list no-lines>
             <ion-item class="capitalize details-content" *ngFor="let move of pokemon.moves">
               {{ move.move.name }}
@@ -78,5 +82,5 @@
         </ion-list>
       </ion-card-content>
     </ion-card>
-    
+
 </ion-content>

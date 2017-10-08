@@ -26,8 +26,13 @@ export class PokeapiProvider {
     });
   }
 
-  getItemById(id){
-    return this.http.get(this.url+'item/'+id+'/')
-    .map(api_response => api_response.json());
+  getItemById(id: number): Promise<any> {
+    return new Promise(resolve => {
+      this.http.get(this.url+'item/'+id+'/')
+      .map(api_response => api_response.json())
+      .subscribe(data => {
+        resolve(data);
+      })
+    });
   }
 }

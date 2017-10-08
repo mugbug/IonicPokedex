@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { PokeapiProvider } from '../../providers/pokeapi/pokeapi';
 import { ItemDetailsPage } from '../item-details/item-details';
 import { LoadingController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 // import { Storage } from '@ionic/storage';
 
 
@@ -12,54 +13,86 @@ import { LoadingController } from 'ionic-angular';
   templateUrl: 'item-list.html',
 })
 export class ItemListPage {
-  items = []; // list of items
-  offset = 0; // item id counter
+  private items = []; // list of items
+  private offset = 1; // item id counter
+  private loader:any;
 
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
     private pokeapiProvider: PokeapiProvider,
-    public loading: LoadingController) {
+    public loading: LoadingController,
+    private storage: Storage) {
   }
 
   // when page loads
-  ionViewDidLoad() {
-    // create a loading spinner
-    let loader = this.loading.create({
-      content: 'Looking for Poke-Balls...',
-    });
-    // present spinner while data is being fetched
-    // then dismiss spinner
-    loader.present().then(() => {
-      for(let i=1; i<=15; i++){
-        this.pokeapiProvider.getItemById(i)
-        .subscribe(api_response => {
-          // add item to items list
-          this.items.push(api_response);
-          if(i>10) loader.dismiss();
-        });
-      } // end for
-
-      // increment item id counter
-      this.offset += 15;
-    });
+  ionViewDidLoad(){
+    this.getStoredData();
   }
 
-  openItemDetails(i) {
-    // go to item details page
+  private openItemDetails(i) {
+    // go to pokemon details page
     return this.navCtrl.push(ItemDetailsPage, {item: i});
   }
 
-  doInfinite(infiniteScroll) {
+  private doInfinite(infiniteScroll) {
     // when reached end of list, request more data
     setTimeout(() => {
-      for(let i=1; i<=15; i++){
-        this.pokeapiProvider.getItemById(i+this.offset)
-        .subscribe(api_response => {
-          this.items.push(api_response);
-        });
-      }
-      this.offset += 15;
+      this.fetchItems();
       infiniteScroll.complete();
     }, 500);
+  }
+
+  private createLoading(){
+    if (this.loader == null) {
+      this.loader = this.loading.create({
+        content: 'Looking for Poké-balls...',
+      });
+    }
+  }
+
+  private getItemList(id){
+    this.pokeapiProvider.getItemById(id).then(data => {
+      console.log('current item id: '+id);
+      if(id < this.offset+15){
+        this.items.push(data);
+        // request next pokemon data
+        this.getItemList(++id);
+      } else {
+        this.loader.dismiss();
+        this.loader = null;
+        // set breakpoint
+        this.offset = id;
+        // store all pokemons and current offset
+        this.storage.ready().then(() => {
+          console.log('storage is ready, storing items...');
+          this.storage.set('items', JSON.stringify(this.items));
+          this.storage.set('item_offset', this.offset);
+        });
+      }
+    });
+  }
+
+  private fetchItems(){
+    this.createLoading();
+    this.loader.present().then(() => {
+      this.getItemList(this.offset);
+    });
+  }
+
+  private getStoredData() {
+    this.storage.ready().then(() => {
+      this.storage.get('items').then((stored_items) => {
+        if(stored_items != null){
+          this.items = JSON.parse(stored_items);
+        }
+      });
+      this.storage.get('item_offset').then((stored_offset) => {
+        if(stored_offset != null){
+          this.offset = stored_offset;
+        } else {
+          console.log("no stored items, requesting some...");
+          this.fetchItems();
+        }
+      });
+    });
   }
 }
